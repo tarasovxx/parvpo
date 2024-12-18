@@ -1,6 +1,7 @@
 #include <iostream>
 #include <chrono>
 #include <cmath>
+#include <cstdlib>
 
 bool checkPrime(int value) {
     if (value < 2) return false;
@@ -13,19 +14,22 @@ bool checkPrime(int value) {
     return true;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-    const long long count = 100000000; // 10 mlrd
-    long long cnt = 0;
-    auto start_time = std::chrono::high_resolution_clock::now();
+    if (argc < 2) {
+        std::cerr << "Usage: ./load_cpu <count>" << std::endl;
+        return 1;
+    }
 
-    for (int i = 0; i < count; ++i)
-    {
+    long long count = std::atoll(argv[1]);
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < count; ++i) {
         checkPrime(i);
     }
     auto end_time = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end_time - start_time;
 
-    std::cout << "Execution time: " << elapsed.count() << " seconds" << std::endl;
+    std::cout << count << " " << elapsed.count() << std::endl;
     return 0;
 }
