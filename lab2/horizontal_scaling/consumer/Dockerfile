@@ -12,7 +12,7 @@ COPY json.hpp .
 # Install Boost dependencies
 RUN apt-get update && \
     apt-get install -y build-essential && \
-    apt-get install -y libboost-all-dev
+    apt-get install -y libboost-all-dev && apt-get install -y curl
 
 # Compile the consumer.cpp file
 RUN g++ -lpthread -o consumer consumer.cpp

@@ -1,0 +1,79 @@
+version: '3'
+
+services:
+  # -------------------------------
+  # NGINX - балансировщик
+  # -------------------------------
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - consumer1
+      - consumer2
+      - aggregator
+      - producer1
+      - producer2
+    networks:
+      - lab2network
+
+  # -------------------------------
+  # PRODUCERS
+  # -------------------------------
+  producer1:
+    build:
+      context: producer1
+      no_cache: false
+    env_file:
+      - MSize.env
+    networks:
+      - lab2network
+    # В самом коде producer.go вы должны указать URL: http://nginx:8080
+
+  producer2:
+    build:
+      context: producer2
+      no_cache: false
+    env_file:
+      - MSize.env
+    networks:
+      - lab2network
+    # Аналогично указываете в producer.go: http://nginx:8080
+
+  # -------------------------------
+  # CONSUMERS
+  # -------------------------------
+  consumer1:
+    build:
+      context: consumer
+      no_cache: false
+    networks:
+      - lab2network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+
+  consumer2:
+    build:
+      context: consumer
+      no_cache: false
+    networks:
+      - lab2network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+
+  # -------------------------------
+  # AGGREGATOR
+  # -------------------------------
+  aggregator:
+    build:
+      context: aggregator
+      no_cache: false
+    networks:
+      - lab2network
+
+networks:
+  lab2network:
