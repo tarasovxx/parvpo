@@ -28,13 +28,15 @@ def handle_partial():
     arr = list(map(int, data_str.split(",")))
     partial_results[pid] = arr
     received_count += 1
+    x_time += time_spent
 
     print(f"[Aggregator] Received piece from consumer {pid}, size={len(arr)}, local_time={time_spent:.2f} ms")
 
     if received_count == pnum:
         # Все куски получены
         end_time = time.time()
-        total_time_ms = (end_time - start_time)*1000
+        total_time_ms = (end_time - start_time + x_time)*1000
+        total_time_ms
 
         # Склеиваем
         final_matrix = []
